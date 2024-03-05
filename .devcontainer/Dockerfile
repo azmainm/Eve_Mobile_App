@@ -1,13 +1,15 @@
-FROM cirrusci/flutter:latest
+FROM debian:bookworm
 
-# Install dependencies
-RUN sudo apt-get update && sudo apt-get install -y git curl
+RUN apt-get update && apt-get -y install git curl unzip
 
-# Set up the workspace
-WORKDIR /workspace
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
-# Clone your Flutter project (optional, if you want the container to clone your project)
-# RUN git clone https://github.com/yourusername/your-flutter-project.git /workspace
+RUN mkdir /home/codespace
+WORKDIR /home/codespace
+
+ENV PUB_CACHE=/home/codespace/.pub_cache
 ENV PATH="/home/codespace/flutter/bin:$PATH"
 
 RUN git clone https://github.com/flutter/flutter && \
